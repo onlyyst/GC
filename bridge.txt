@@ -1,1 +1,4 @@
-cd virus && ls
+RES:
+RAT
+keyloger
+server.go
