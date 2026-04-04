@@ -1,1 +1,1 @@
-WAIT
+rm -rf master.zip
