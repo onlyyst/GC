@@ -1,1 +1,2 @@
-irus
+RES:
+sh: 1: irus: not found
