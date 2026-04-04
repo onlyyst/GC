@@ -1,5 +1,1 @@
-RES:
-RAT
-hi.go
-keyloger
-server.go
+WAIT
