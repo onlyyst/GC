@@ -1,2 +1,1 @@
-RES:
-sh: 1: erver.go: not found
+WAIT
