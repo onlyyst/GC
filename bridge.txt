@@ -1,5 +1,7 @@
-RES [localhost | linux]:
-RAT
-hi.go
-keyloger
-server.go
+RES:
+sh: 1: sh: 1: linux]:: not found
+RES: not found
+sh: 2: RAT: not found
+sh: 3: hi.go: not found
+sh: 4: keyloger: not found
+sh: 5: server.go: not found
