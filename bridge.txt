@@ -1,15 +1,1 @@
-RES:
-go
-go.mod
-go.sum
-hi.go
-main.go
-main.py
-master.zip
-master.zip.1
-megacmd-Debian_12_arm64.deb
-my_tools
-playit
-server.go
-server.py
-virus
+WAIT
