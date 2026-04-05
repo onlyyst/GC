@@ -1,2 +1,1 @@
-RES:
-sh: 1: [ALL]whoami: not found
+WAIT
