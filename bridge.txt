@@ -1,1 +1,2 @@
-[ALL]c
+RES:
+sh: 1: [ALL]c: not found
