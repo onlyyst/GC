@@ -1,1 +1,2 @@
-WAIT|
+RES:
+sh: 1: Syntax error: end of file unexpected
