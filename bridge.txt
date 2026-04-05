@@ -1,1 +1,1 @@
-WAIT
+[ALL]whoami
