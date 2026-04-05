@@ -1,1 +1,1 @@
-RES:-localhost|sh: 1: ALL: not found
+ALL|whoami
