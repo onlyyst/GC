@@ -1,1 +1,3 @@
-ALL|whoami
+RES:
+sh: 1: ALL: not found
+root
