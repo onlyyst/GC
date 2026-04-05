@@ -1,1 +1,2 @@
-[ALL]whoami
+RES:
+sh: 1: [ALL]whoami: not found
